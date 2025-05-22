@@ -7,55 +7,53 @@
                 </ion-buttons>
                 <ion-title class="ion-text-center">
                     <div class="title-container">
-                        <img src="/porsche-logo.svg" alt="Porsche Logo" class="porsche-logo" />
                         <span>KPIs</span>
                     </div>
                 </ion-title>
             </ion-toolbar>
         </ion-header>
 
-        <ion-content :fullscreen="true" class="ion-padding porsche-content">
-            <ion-header collapse="condense">
-                <ion-toolbar>
-                    <ion-title size="large">KPIs</ion-title>
-                </ion-toolbar>
-            </ion-header>
+        <ion-content :scrollY="true" class="porsche-content">
+            <div class="dashboard-background"></div>
+            <div class="kpi-container">
+                <h1 class="section-title">KPIs de Negocio</h1>
+                <ion-accordion-group expand="inset" :multiple="true" class="porsche-accordion">
+                    <ion-accordion v-for="item in businessKpis" :key="item.id" :value="item.id.toString()">
+                        <ion-item slot="header" class="porsche-accordion-header">
+                            <ion-label>{{ item.id }}. {{ item.title }}</ion-label>
+                        </ion-item>
+                        <div class="ion-padding porsche-accordion-content" slot="content">
+                            <p v-html="item.description"></p>
+                            <ion-list :inset="true" class="porsche-list">
+                                <ion-item v-for="(element, index) in item.smart" :key="index" class="porsche-list-item">
+                                    <ion-label><span class="smart-letter">{{ element.letter }}</span> → {{
+                                        element.content
+                                    }}</ion-label>
+                                </ion-item>
+                            </ion-list>
+                        </div>
+                    </ion-accordion>
+                </ion-accordion-group>
 
-            <h1 class="ion-padding section-title">KPIs de Negocio</h1>
-            <ion-accordion-group expand="inset" :multiple="true" class="porsche-accordion">
-                <ion-accordion v-for="item in businessKpis" :key="item.id" :value="item.id.toString()">
-                    <ion-item slot="header" class="porsche-accordion-header">
-                        <ion-label>{{ item.id }}. {{ item.title }}</ion-label>
-                    </ion-item>
-                    <div class="ion-padding porsche-accordion-content" slot="content">
-                        <p v-html="item.description"></p>
-                        <ion-list :inset="true" class="porsche-list">
-                            <ion-item v-for="(element, index) in item.smart" :key="index" class="porsche-list-item">
-                                <ion-label><b class="smart-letter">{{ element.letter }}</b> → {{ element.content
+                <h1 class="section-title">KPIs Técnicos</h1>
+                <ion-accordion-group expand="inset" :multiple="true" class="porsche-accordion">
+                    <ion-accordion v-for="item in technicalKpis" :key="item.id" :value="item.id.toString()">
+                        <ion-item slot="header" class="porsche-accordion-header">
+                            <ion-label>{{ item.id }}. {{ item.title }}</ion-label>
+                        </ion-item>
+                        <div class="ion-padding porsche-accordion-content" slot="content">
+                            <p>{{ item.description }}</p>
+                            <ion-list :inset="true" class="porsche-list">
+                                <ion-item v-for="(element, index) in item.smart" :key="index" class="porsche-list-item">
+                                    <ion-label><span class="smart-letter">{{ element.letter }}</span> → {{
+                                        element.content
                                     }}</ion-label>
-                            </ion-item>
-                        </ion-list>
-                    </div>
-                </ion-accordion>
-            </ion-accordion-group>
-            <br>
-            <h1 class="ion-padding section-title">KPIs Técnicos</h1>
-            <ion-accordion-group expand="inset" :multiple="true" class="porsche-accordion">
-                <ion-accordion v-for="item in technicalKpis" :key="item.id" :value="item.id.toString()">
-                    <ion-item slot="header" class="porsche-accordion-header">
-                        <ion-label>{{ item.id }}. {{ item.title }}</ion-label>
-                    </ion-item>
-                    <div class="ion-padding porsche-accordion-content" slot="content">
-                        <p>{{ item.description }}</p>
-                        <ion-list :inset="true" class="porsche-list">
-                            <ion-item v-for="(element, index) in item.smart" :key="index" class="porsche-list-item">
-                                <ion-label><b class="smart-letter">{{ element.letter }}</b> → {{ element.content
-                                    }}</ion-label>
-                            </ion-item>
-                        </ion-list>
-                    </div>
-                </ion-accordion>
-            </ion-accordion-group>
+                                </ion-item>
+                            </ion-list>
+                        </div>
+                    </ion-accordion>
+                </ion-accordion-group>
+            </div>
         </ion-content>
     </ion-page>
 </template>
@@ -206,84 +204,175 @@ const technicalKpis = ref<SmartGoal[]>([
 ]);
 </script>
 
+<style>
+/* Importar fuentes de Google */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+</style>
+
 <style scoped>
-/* Estilos de Porsche */
+/* Estilos modernos de Porsche */
+:root {
+    --porsche-yellow: #FFDA00;
+    --porsche-yellow-light: #FFE866;
+    --porsche-yellow-dark: #FFB800;
+    --porsche-black: #000000;
+    --porsche-gray-dark: #333333;
+    --porsche-gray: #666666;
+    --porsche-gray-light: #EEEEEE;
+}
+
+* {
+    font-family: 'Montserrat', sans-serif;
+}
+
 .porsche-toolbar {
-    --background: #FFDA00;
-    /* Amarillo Porsche */
-    --color: #000000;
+    --background: var(--porsche-yellow);
+    --color: var(--porsche-black);
     --border-color: transparent;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    height: 60px;
 }
 
 .title-container {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-}
-
-.porsche-logo {
-    height: 24px;
-    width: auto;
+    gap: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
 }
 
 .porsche-content {
-    --background: #FFFFFF;
-    /* Fondo blanco */
-    --color: #000000;
-    /* Texto negro */
+    --background: #f8f9fa;
+    --color: var(--porsche-black);
+    font-family: 'Montserrat', sans-serif;
+}
+
+.dashboard-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    z-index: -1;
+}
+
+.kpi-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .section-title {
-    color: #000000;
-    font-weight: 600;
-    font-size: 24px;
-    margin-bottom: 10px;
+    color: var(--porsche-black);
+    font-weight: 700;
+    font-size: 28px;
+    margin: 24px 0 16px;
+    position: relative;
+    display: inline-block;
+    letter-spacing: 0.5px;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--porsche-yellow) 0%, var(--porsche-yellow-dark) 100%);
+    border-radius: 2px;
 }
 
 .porsche-accordion {
-    --ion-item-background: #FFFFFF;
+    --ion-item-background: transparent;
+    margin-bottom: 30px;
 }
 
 .porsche-accordion-header {
-    --background: #F5F5F5;
-    --color: #000000;
-    border-radius: 4px;
-    margin-bottom: 2px;
+    --background: #FFFFFF;
+    --color: var(--porsche-black);
+    border-radius: 12px;
+    margin-bottom: 8px;
+    font-weight: 500;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.porsche-accordion-header:hover {
+    --background: #FAFAFA;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
 }
 
 .porsche-accordion-content {
     background-color: #FFFFFF;
-    color: #000000;
+    color: var(--porsche-black);
+    border-radius: 0 0 12px 12px;
+    margin-top: -8px;
+    margin-bottom: 16px;
+    padding: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    line-height: 1.6;
 }
 
 .porsche-list {
-    background-color: #FFFFFF;
+    background-color: transparent;
+    margin-top: 16px;
 }
 
 .porsche-list-item {
-    --background: #FFFFFF;
-    --color: #000000;
-    --border-color: #EEEEEE;
+    --background: transparent;
+    --color: var(--porsche-black);
+    --border-color: rgba(0, 0, 0, 0.05);
+    --padding-start: 0;
+    --inner-padding-end: 0;
+    margin-bottom: 8px;
 }
 
 .smart-letter {
-    display: inline-block;
-    width: 24px;
-    height: 24px;
-    line-height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
     text-align: center;
-    background-color: #FFDA00;
-    /* Amarillo Porsche */
-    color: #000000;
+    background: linear-gradient(135deg, var(--porsche-yellow) 0%, var(--porsche-yellow-dark) 100%);
+    color: var(--porsche-black);
     border-radius: 50%;
-    margin-right: 8px;
+    margin-right: 12px;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(255, 218, 0, 0.3);
 }
 
+/* Estilos mejorados para el estado activo del acordeón */
 ion-accordion.accordion-expanding ion-item[slot='header'],
 ion-accordion.accordion-expanded ion-item[slot='header'] {
-    --background: rgba(255, 218, 0, 0.2);
-    /* Amarillo Porsche transparente */
-    --color: #000000;
+    --background: #FFFFFF;
+    --color: var(--porsche-black);
+    font-weight: 700;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Añadir un borde izquierdo para mayor énfasis visual */
+ion-accordion.accordion-expanded ion-item[slot='header'] {
+    border-left: 4px solid var(--porsche-yellow);
+    --padding-start: 12px;
+}
+
+/* Mejorar la visibilidad del texto en el estado activo */
+ion-accordion.accordion-expanded ion-item[slot='header'] ion-label {
+    font-weight: 700;
+    color: var(--porsche-black);
+}
+
+p {
+    margin-bottom: 16px;
+    line-height: 1.6;
+    color: var(--porsche-gray);
 }
 </style>

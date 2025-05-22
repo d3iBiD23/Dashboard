@@ -8,22 +8,18 @@
           </div>
           <ion-list id="inbox-list" class="porsche-list">
             <div class="menu-header">
-              <ion-list-header>Dashboard</ion-list-header>
-              <ion-note>Data Visualization</ion-note>
+              <ion-list-header class="montserrat-font">PorscheLink</ion-list-header>
+              <ion-note class="montserrat-font">PorscheLink Dashboard</ion-note>
             </div>
 
             <ion-menu-toggle :auto-hide="false" v-for="(p, i) in appPages" :key="i">
-              <ion-item @click="selectedIndex = i" router-direction="root" :router-link="p.url" lines="none"
+              <ion-item @click="setSelectedIndex(i)" router-direction="root" :router-link="p.url" lines="none"
                 :detail="false" class="porsche-item" :class="{ selected: selectedIndex === i }">
                 <ion-icon aria-hidden="true" slot="start" :ios="p.iosIcon" :md="p.mdIcon"></ion-icon>
-                <ion-label>{{ p.title }}</ion-label>
+                <ion-label class="montserrat-font">{{ p.title }}</ion-label>
               </ion-item>
             </ion-menu-toggle>
           </ion-list>
-
-          <div class="porsche-footer">
-            <div class="version">v1.0.0</div>
-          </div>
         </ion-content>
       </ion-menu>
       <ion-router-outlet id="main-content"></ion-router-outlet>
@@ -40,13 +36,13 @@ import { useRoute } from 'vue-router';
 const selectedIndex = ref(0);
 const appPages = [
   {
-    title: 'Business Dashboard',
+    title: 'Dashboard Negocio',
     url: '/business',
     iosIcon: rocketOutline,
     mdIcon: rocketSharp,
   },
   {
-    title: 'Technical Dashboard',
+    title: 'Dashboard Técnico',
     url: '/technical',
     iosIcon: pulseOutline,
     mdIcon: pulseSharp,
@@ -60,24 +56,108 @@ const appPages = [
 ];
 const route = useRoute();
 
-// 🔄 Función para actualizar el `selectedIndex` según la URL actual
 const currentPath = computed(() => route.path);
 
-// Ejecutar cuando la app carga
 onMounted(() => {
-  const index = appPages.findIndex(page => page.url === currentPath.value);
-  selectedIndex.value = index !== -1 ? index : 0;
+  updateSelectedIndex();
+  document.documentElement.classList.add('montserrat-root');
 });
 
-// Ejecutar cada vez que cambia la ruta
 watch(currentPath, () => {
+  updateSelectedIndex();
+});
+
+const updateSelectedIndex = () => {
   const index = appPages.findIndex(page => page.url === currentPath.value);
   selectedIndex.value = index !== -1 ? index : 0;
-});
+};
+
+const setSelectedIndex = (index: number) => {
+  selectedIndex.value = index;
+};
 </script>
 
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --ion-font-family: 'Montserrat', sans-serif;
+}
+
+.montserrat-font {
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+.montserrat-root * {
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+ion-title,
+ion-label,
+ion-list-header,
+ion-note,
+ion-button,
+ion-item,
+ion-menu-toggle,
+ion-card-title,
+ion-card-subtitle,
+ion-card-content,
+ion-toolbar,
+ion-header,
+ion-footer,
+ion-segment-button,
+ion-tab-button,
+ion-badge,
+ion-chip,
+ion-alert,
+ion-toast,
+ion-modal,
+ion-popover,
+ion-action-sheet,
+ion-select,
+ion-select-option,
+ion-datetime,
+ion-picker,
+ion-range,
+ion-toggle,
+ion-checkbox,
+ion-radio,
+ion-searchbar,
+ion-input,
+ion-textarea {
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+div,
+a,
+button,
+input,
+select,
+textarea,
+label {
+  font-family: 'Montserrat', sans-serif !important;
+}
+</style>
+
 <style scoped>
-/* Estilos de Porsche */
+:root {
+  --porsche-yellow: #FFDA00;
+  --porsche-yellow-light: #FFE866;
+  --porsche-yellow-dark: #FFB800;
+  --porsche-black: #000000;
+  --porsche-gray-dark: #333333;
+  --porsche-gray: #666666;
+  --porsche-gray-light: #EEEEEE;
+}
+
 .porsche-menu {
   --background: #FFFFFF;
   --width: 280px;
@@ -91,115 +171,110 @@ watch(currentPath, () => {
 }
 
 .porsche-header {
-  background-color: #FFDA00;
+  background: linear-gradient(135deg, var(--porsche-yellow) 0%, var(--porsche-yellow-dark) 100%);
   padding: 24px;
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .porsche-logo {
-  height: 40px;
+  height: rem;
   width: auto;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 .porsche-list {
   background: #FFFFFF;
   flex: 1;
+  padding-top: 16px;
 }
 
 .menu-header {
-  padding: 16px 16px 8px 16px;
+  padding: 0 20px 16px;
+}
+
+ion-list-header {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--porsche-black);
+  letter-spacing: 0.5px;
+  padding: 0;
+  margin-bottom: 4px;
+}
+
+ion-note {
+  color: var(--porsche-gray);
+  font-size: 14px;
+  font-weight: 400;
 }
 
 .porsche-item {
-  --background: #FFFFFF;
-  --color: #333333;
-  margin: 6px 12px;
-  border-radius: 8px;
+  --background: transparent;
+  --color: var(--porsche-gray-dark);
+  margin: 8px 16px;
+  border-radius: 12px;
   font-weight: 500;
   --padding-start: 16px;
   --padding-end: 16px;
-  --min-height: 48px;
-  transition: all 0.2s ease;
+  --min-height: 52px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.3px;
+}
+
+.porsche-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--porsche-yellow) 0%, var(--porsche-yellow-dark) 100%);
+  opacity: 0;
+  transition: all 0.3s ease;
 }
 
 .porsche-item.selected {
-  --background: rgba(255, 218, 0, 0.15);
-  --color: #000000;
+  --background: linear-gradient(90deg, rgba(255, 218, 0, 0.15) 0%, rgba(255, 184, 0, 0.15) 100%);
+  --color: var(--porsche-black);
   font-weight: 600;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
-.porsche-item.selected ion-icon {
-  color: #000000;
+.porsche-item.selected::before {
+  width: 4px;
+  opacity: 1;
 }
 
 .porsche-item ion-icon {
   margin-right: 12px;
-  font-size: 20px;
+  font-size: 22px;
+  color: var(--porsche-gray);
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
 }
 
-.porsche-footer {
-  padding: 16px;
-  text-align: center;
-  color: #999;
-  font-size: 12px;
-  border-top: 1px solid #f0f0f0;
+.porsche-item.selected ion-icon {
+  color: var(--porsche-yellow-dark);
+  transform: scale(1.1);
+  filter: drop-shadow(0 2px 4px rgba(255, 184, 0, 0.3));
+}
+
+.porsche-item:hover:not(.selected) {
+  --background: rgba(255, 218, 0, 0.05);
+  transform: translateX(4px);
+}
+
+.porsche-item:hover:not(.selected) ion-icon {
+  color: var(--porsche-yellow-dark);
 }
 
 ion-split-pane {
   --side-width: 280px;
   --side-max-width: 280px;
-}
-
-ion-menu.md ion-list {
-  padding: 0;
-}
-
-ion-menu.md ion-note {
-  margin-bottom: 16px;
-  color: #666666;
-  font-size: 14px;
-}
-
-ion-menu.md ion-list-header {
-  font-size: 20px;
-  font-weight: 600;
-  min-height: 20px;
-  color: #000000;
-  padding: 0;
-  margin-bottom: 4px;
-}
-
-ion-menu.ios ion-content {
-  --padding-bottom: 20px;
-}
-
-ion-menu.ios ion-list {
-  padding: 0;
-}
-
-ion-menu.ios ion-note {
-  line-height: 24px;
-  margin-bottom: 12px;
-  color: #666666;
-}
-
-ion-menu.ios ion-item {
-  --padding-start: 16px;
-  --padding-end: 16px;
-  --min-height: 50px;
-}
-
-ion-menu.ios ion-item ion-icon {
-  font-size: 24px;
-  color: #000000;
-}
-
-ion-note {
-  display: inline-block;
-  font-size: 14px;
-  color: #666666;
 }
 </style>
